@@ -4,6 +4,14 @@ function sleep(ms) {
     ms = (ms) ? ms : 0;
     return new Promise(resolve => {setTimeout(resolve, ms);});
 }
+function randomName() {
+    let result = '';
+    let i;
+    for (i = 0; i < 8; i++) {
+        result += (Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1));
+    }
+    return result + '.png';
+}
 
 process.on('uncaughtException', (error) => {
     console.error(error);
@@ -49,7 +57,7 @@ if (typeof process.argv[4] === 'string') {
 
 var isMobile = false;
 
-let filename = `${dateStr}_full_screenshot_${width}_${height}.png`;
+let filename = randomName();
 
 (async() => {
 
