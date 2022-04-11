@@ -58,7 +58,8 @@ var isMobile = false;
 			'--no-sandbox',
 			'--disable-setuid-sandbox',
 			'--ignore-certificate-errors'
-		]
+		],
+		ignoreHTTPSErrors: true
 	});
 
 	const page = await browser.newPage();
