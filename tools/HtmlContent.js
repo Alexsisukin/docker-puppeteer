@@ -57,21 +57,27 @@ var isMobile = false;
 		args: [
 			'--no-sandbox',
 			'--disable-setuid-sandbox',
-			'--ignore-certificate-errors'
+			'--ignore-certificate-errors',
+			'--disable-blink-features=AutomationControlled'
 		],
-		ignoreHTTPSErrors: true
+		ignoreHTTPSErrors: true,
 	});
 
 	const page = await browser.newPage();
+	await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
-	page.setViewport({
+	await page.setViewport({
 		width,
 		height,
 		isMobile
 	});
+	await page.evaluate(() => {
+		Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+	});
 
 	await page.goto(url, {waitUntil: 'networkidle2'});
-
+	await page.waitForTimeout(500);
+	await page.mouse.move(100, 100);
 	await sleep(delay);
 
 	const content = await page.content();
