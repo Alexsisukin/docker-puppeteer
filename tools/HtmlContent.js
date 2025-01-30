@@ -76,8 +76,6 @@ var isMobile = false;
 	});
 
 	await page.goto(url, {waitUntil: 'networkidle2'});
-	await page.waitForTimeout(500);
-	await page.mouse.move(100, 100);
 	await sleep(delay);
 
 	const content = await page.content();
