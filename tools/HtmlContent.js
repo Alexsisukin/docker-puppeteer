@@ -20,6 +20,7 @@ process.on('unhandledRejection', (reason, p) => {
 });
 
 const puppeteer = require('puppeteer');
+const proxyChain = require('proxy-chain');
 
 // console.log(process.argv);
 
@@ -47,20 +48,32 @@ var delay = 0;
 if (typeof process.argv[4] === 'string') {
 	delay = parseInt(process.argv[4], 10);
 }
+var proxy_url = '';
+if (typeof process.argv[5] === 'string') {
+	proxy_url = process.argv[5];
+}
 
 var isMobile = false;
 
 
 (async () => {
 
+
+	const args_browser = [
+		'--no-sandbox',
+		'--disable-setuid-sandbox',
+		'--ignore-certificate-errors',
+		'--disable-blink-features=AutomationControlled',
+	];
+	if (proxy_url !== ''){
+		const newProxyUrl = await proxyChain.anonymizeProxy(proxy_url);
+		args_browser.push(`--proxy-server=${newProxyUrl}`)
+	}
+
 	const browser = await puppeteer.launch({
-		args: [
-			'--no-sandbox',
-			'--disable-setuid-sandbox',
-			'--ignore-certificate-errors',
-			'--disable-blink-features=AutomationControlled'
-		],
+		args: args_browser,
 		ignoreHTTPSErrors: true,
+		headless: true
 	});
 
 	const page = await browser.newPage();
@@ -88,6 +101,5 @@ var isMobile = false;
 			content
 		})
 	);
-
 })();
 
