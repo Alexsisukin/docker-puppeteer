@@ -87,8 +87,11 @@ var isMobile = false;
 	await page.evaluate(() => {
 		Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
 	});
+	try {
+		await page.goto(url, {waitUntil: 'networkidle2'});
+	}catch (error){
+	}
 
-	await page.goto(url, {waitUntil: 'networkidle2'});
 	await sleep(delay);
 
 	const content = await page.content();
